@@ -1,6 +1,7 @@
-[gd_scene load_steps=19 format=3 uid="uid://cxveveevg3frf"]
+[gd_scene load_steps=21 format=3 uid="uid://cxveveevg3frf"]
 
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_np8or"]
+[ext_resource type="Shader" path="res://shaders/smooth_pixel.gdshader" id="2_g717k"]
 [ext_resource type="Texture2D" uid="uid://csbps64ipe807" path="res://assets/textures/_Fall.png" id="2_x06xb"]
 [ext_resource type="Texture2D" uid="uid://cho0xjx180g2s" path="res://assets/textures/_Idle.png" id="3_iaelv"]
 [ext_resource type="Texture2D" uid="uid://dl5whtlagw4va" path="res://assets/textures/_Jump.png" id="4_h4p4u"]
@@ -14,6 +15,9 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v66ab"]
 size = Vector2(11, 37.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_brc73"]
+shader = ExtResource("2_g717k")
 
 [sub_resource type="Animation" id="Animation_0650n"]
 length = 0.001
@@ -277,13 +281,17 @@ _data = {
 script = ExtResource("1_np8or")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 21)
+position = Vector2(-0.5, 21.25)
 shape = SubResource("RectangleShape2D_v66ab")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_brc73")
+position = Vector2(4, 0)
 texture = ExtResource("3_iaelv")
-offset = Vector2(4, 0)
 hframes = 10
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "idle"
