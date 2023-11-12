@@ -13,7 +13,7 @@ class PlayerInput:
 @export var accel := 9000.0
 @export var decel := 9000.0
 @export var air_accel := 750.0
-@export var air_decel := 1000.0
+@export var air_decel := 750.0
 @export var jump_velocity := -600.0
 @export var max_jumps := 3
 @export var max_fall_velocity := 600.0

@@ -20,7 +20,6 @@ func physics_update(delta: float) -> void:
 		if detatch_timer > 0:
 			detatch_timer -= delta * 1000.0
 		else:
-			print("detatch timer up")
 			if not player.is_on_floor():
 				state_machine.transition_to("Air")
 				return
@@ -34,13 +33,17 @@ func physics_update(delta: float) -> void:
 	if player.input.jump:
 		state_machine.transition_to("Air", {do_wall_jump = true, direction = -player.facing})
 		return
-	else:
-		player.velocity.x = wall_direction
-		
-	if move_y != 0:
-		var speed = -player.wall_climb_speed if move_y < 0 else player.wall_slide_speed
-		player.velocity.y = speed
-	else:
-		player.velocity.y = 0
+	if player.input.dash:
+		player.velocity.x = -wall_direction
+		player.check_flip(-wall_direction)
+		state_machine.transition_to("Dash")
+		return
+	
+
+	player.velocity.x = wall_direction
+	player.velocity.y += player.gravity
+	if player.velocity.y >= 0:
+		player.velocity.y = clamp(player.velocity.y, 0, player.wall_slide_speed)
+
 	player.move_and_slide()
 		

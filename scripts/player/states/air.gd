@@ -13,20 +13,26 @@ func enter(msg: Dictionary = {}) -> void:
 		_do_jump()
 	else:
 		player.ap.play("fall")
+		
+func exit():
+	is_wall_jumping = false
 
 func update(delta):
 	if is_wall_jumping:
 		wall_jump_input_timer -= delta * 1000.0
 		if wall_jump_input_timer <= 0.0:
-			print("done wall jumping")
 			is_wall_jumping = false
 	
 func physics_update(delta: float) -> void:
 	
 	if not is_wall_jumping:
 		player.check_flip(player.input.x)
-		var velocity = player.velocity.x + player.air_accel * player.input.x * delta
-		player.velocity.x = clamp(velocity, -player.speed, player.speed)
+		if player.input.x != 0:
+			var velocity = player.velocity.x + player.air_accel * player.input.x * delta
+			player.velocity.x = clamp(velocity, -player.speed, player.speed)
+		elif player.velocity.x != 0:
+			var velocity = player.velocity.x + -player.facing * player.air_decel * delta
+			player.velocity.x = 0.0 if sign(velocity) != sign(player.velocity.x) else velocity
 		
 	player.velocity.y += player.gravity
 	player.move_and_slide()
@@ -50,8 +56,9 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("Wall")
 		return
 	else:
-		player.ap.play("fall")
 		player.velocity.y = min(player.velocity.y, player.max_fall_velocity)
+		if player.velocity.y > 0:
+			player.ap.play("fall")
 
 func _do_jump() -> void:
 	print("do regular jump")
@@ -66,4 +73,5 @@ func _do_wall_jump(direction: int) -> void:
 	player.check_flip(direction)
 	is_wall_jumping = true
 	wall_jump_input_timer = wall_jump_input_th
+	player.ap.play("jump")
 	
