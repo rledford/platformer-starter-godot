@@ -66,9 +66,6 @@ func consume_jump() -> void:
 	_jumps_remaining -= 1
 	_coyote_timer = 0
 	
-func consume_wall_jump() -> void:
-	_jump_buffer_timer = 0
-	
 func can_jump() -> bool:
 	return _jumps_remaining > 0
 	
