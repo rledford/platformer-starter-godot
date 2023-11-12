@@ -13,7 +13,7 @@ func physics_update(delta: float) -> void:
 	timer -= delta * 1000.0
 	if timer < 0:
 		if player.is_on_floor():
-			if player.get_input_x() != 0:
+			if player.input.x != 0:
 				state_machine.transition_to("Run")
 			else:
 				state_machine.transition_to("Idle")

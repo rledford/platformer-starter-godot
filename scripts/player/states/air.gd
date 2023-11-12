@@ -9,31 +9,29 @@ func enter(msg: Dictionary = {}) -> void:
 		player.ap.play("fall")
 	
 func physics_update(delta: float) -> void:
-	var move_x = player.get_input_x()
+	player.check_flip(player.input.x)
 	
-	player.check_flip(move_x)
-	
-	player.velocity.x = player.speed * move_x
+	player.velocity.x = player.speed * player.input.x
 	player.velocity.y += player.gravity
 	player.move_and_slide()
 	
 	if player.is_on_floor():
 		player.reset_jumps()
-		if move_x != 0:
+		if player.input.x != 0:
 			state_machine.transition_to("Run")
 			return
 		else:
 			state_machine.transition_to("Idle")
 			return
-	elif Input.is_action_just_pressed("ui_accept"):
+	elif player.input.jump:
 		if player.can_jump():
 			_do_jump()
-	elif player.get_dash_pressed():
+	elif player.input.dash:
 			state_machine.transition_to("Dash")
 			return
 			
 	if player.velocity.y > 0:
-		if player.is_on_wall() && player.get_wall_normal().x == -move_x:
+		if player.is_on_wall() && player.get_wall_normal().x == -player.input.x:
 			state_machine.transition_to("Wall")
 			return
 		else:

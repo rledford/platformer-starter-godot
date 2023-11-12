@@ -1,6 +1,13 @@
 class_name Player
 extends CharacterBody2D
 
+class PlayerInput:
+	var x: int
+	var y: int
+	var dash: bool
+	var jump: bool
+	var jump_canceled: bool
+
 @export var gravity := 30.0
 @export var speed := 150.0
 @export var accel := 9000.0
@@ -17,18 +24,20 @@ extends CharacterBody2D
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var ap: AnimationPlayer = $AnimationPlayer
+@onready var input = PlayerInput.new()
 
 var facing: int = 1
 var _jumps_remaining: int = max_jumps
-
-func get_input_x() -> int:
-	return Input.get_axis("move_left", "move_right")
 	
-func get_input_y() -> int:
-	return Input.get_axis("move_up", "move_down")
+func _gather_input() -> void:
+	input.x = Input.get_axis("move_left", "move_right")
+	input.y = Input.get_axis("move_up", "move_down")
+	input.jump = Input.is_action_just_pressed("ui_accept")
+	input.jump_canceled = Input.is_action_just_released("ui_accept")
+	input.dash = Input.is_action_just_pressed("dash")
 	
-func get_dash_pressed() -> bool:
-	return Input.is_action_just_pressed("dash")
+func _physics_process(_delta) -> void:
+	_gather_input()
 	
 func check_flip(direction: int) -> void:
 	if direction == 0: return

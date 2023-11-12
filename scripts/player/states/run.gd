@@ -10,18 +10,19 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("Air")
 		return
 		
-	var move_x = player.get_input_x()
-		
-	player.check_flip(move_x)
+	player.check_flip(player.input.x)
 	player.velocity.y += player.gravity * delta
 		
-	if Input.is_action_just_pressed("ui_accept"):
+	if player.input.jump:
 		state_machine.transition_to("Air", {do_jump = true})
-	elif move_x == 0:
+		return
+	elif player.input.x == 0:
 		state_machine.transition_to("Idle")
-	elif player.get_dash_pressed():
+		return
+		
+	if player.input.dash:
 		state_machine.transition_to("Dash")
 	else:
-		var velocity = player.velocity.x + player.accel * move_x * delta
+		var velocity = player.velocity.x + player.accel * player.input.x * delta
 		player.velocity.x = clamp(velocity, -player.speed, player.speed)
 		player.move_and_slide()

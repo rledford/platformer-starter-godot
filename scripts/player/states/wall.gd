@@ -9,8 +9,8 @@ func enter(_msg: Dictionary = {}) -> void:
 	player.ap.play("idle")
 	
 func physics_update(_delta: float) -> void:
-	var move_x = player.get_input_x()
-	var move_y = player.get_input_y()
+	var move_x = player.input.x
+	var move_y = player.input.y
 	var is_on_wall = player.is_on_wall()
 	
 	if not is_on_wall or move_x != wall_direction:
