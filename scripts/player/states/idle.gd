@@ -23,5 +23,5 @@ func physics_update(delta: float):
 		state_machine.transition_to("Run")
 	elif player.velocity.x != 0:
 		var velocity = player.velocity.x + -player.facing * player.decel * delta
-		player.velocity.x = 0 if sign(velocity) != sign(player.velocity.x) else velocity.x
+		player.velocity.x = 0.0 if sign(velocity) != sign(player.velocity.x) else velocity
 		player.move_and_slide()

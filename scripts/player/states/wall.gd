@@ -2,29 +2,41 @@ class_name PlayerWallState
 extends PlayerState
 
 var wall_direction = 0
+var detatch_th = 100.0
+var detatch_timer = 0
 
 func enter(_msg: Dictionary = {}) -> void:
 	print("enter wall state")
 	wall_direction = player.facing
 	player.ap.play("idle")
+	detatch_timer = detatch_th
 	
-func physics_update(_delta: float) -> void:
+func physics_update(delta: float) -> void:
 	var move_x = player.input.x
 	var move_y = player.input.y
 	var is_on_wall = player.is_on_wall()
 	
 	if not is_on_wall or move_x != wall_direction:
-		if not player.is_on_floor():
-			state_machine.transition_to("Air")
-			return
-		elif move_x != 0:
-			state_machine.transition_to("Run")
-			return
+		if detatch_timer > 0:
+			detatch_timer -= delta * 1000.0
 		else:
-			state_machine.transition_to("Idle")
-			return
+			print("detatch timer up")
+			if not player.is_on_floor():
+				state_machine.transition_to("Air")
+				return
+			elif move_x != 0:
+				state_machine.transition_to("Run")
+				return
+			else:
+				state_machine.transition_to("Idle")
+				return
+	
+	if player.input.jump:
+		state_machine.transition_to("Air", {do_wall_jump = true, direction = -player.facing})
+		return
 	else:
 		player.velocity.x = wall_direction
+		
 	if move_y != 0:
 		var speed = -player.wall_climb_speed if move_y < 0 else player.wall_slide_speed
 		player.velocity.y = speed
