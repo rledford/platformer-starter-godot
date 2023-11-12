@@ -19,8 +19,10 @@ class PlayerInput:
 @export var max_fall_velocity := 600.0
 @export var dash_time := 200.0
 @export var dash_speed := 300.0
-@export var wall_climb_speed := 100.0
 @export var wall_slide_speed := 75.0
+@export var coyote_time := 100.0
+@export var has_coyote := false
+@export var jump_buffer_time := 100.0
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var ap: AnimationPlayer = $AnimationPlayer
@@ -28,15 +30,23 @@ class PlayerInput:
 
 var facing: int = 1
 var _jumps_remaining: int = max_jumps
+var _jump_buffer_timer: float = 0
 	
 func _gather_input() -> void:
+	
 	input.x = Input.get_axis("move_left", "move_right")
 	input.y = Input.get_axis("move_up", "move_down")
-	input.jump = Input.is_action_just_pressed("ui_accept")
+	input.jump = _jump_buffer_timer > 0
 	input.jump_canceled = Input.is_action_just_released("ui_accept")
 	input.dash = Input.is_action_just_pressed("dash")
 	
-func _physics_process(_delta) -> void:
+func _physics_process(delta) -> void:
+	if _jump_buffer_timer > 0:
+		_jump_buffer_timer -= delta * 1000.0
+		
+	if Input.is_action_just_pressed("ui_accept"):
+		_jump_buffer_timer = jump_buffer_time
+	
 	_gather_input()
 	
 func check_flip(direction: int) -> void:
@@ -49,6 +59,7 @@ func check_flip(direction: int) -> void:
 		scale.x *= -1
 		
 func consume_jump() -> void:
+	_jump_buffer_timer = 0
 	_jumps_remaining -= 1
 	
 func can_jump() -> bool:
