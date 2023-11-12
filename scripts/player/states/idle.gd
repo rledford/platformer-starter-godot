@@ -4,6 +4,7 @@ extends PlayerState
 func enter(_msg: Dictionary = {}) -> void:
 	print("enter idle")
 	player.ap.play("idle")
+	player.reset_jumps()
 	
 func physics_update(delta: float):
 	if not player.is_on_floor():

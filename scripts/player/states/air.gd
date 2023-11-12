@@ -59,6 +59,8 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("Wall")
 		return
 	else:
+		if player.input.jump_canceled && player.velocity.y < 0.0:
+			player.velocity.y *= player.jump_cancel_mult
 		player.velocity.y = min(player.velocity.y, player.max_fall_velocity)
 		if player.velocity.y > 0 && !player.has_coyote():
 			player.ap.play("fall")
@@ -71,6 +73,7 @@ func _do_jump() -> void:
 	
 func _do_wall_jump(direction: int) -> void:
 	print("do wall jump")
+	player.consume_jump()
 	player.velocity.x = sign(direction) * player.speed
 	player.velocity.y = player.jump_velocity
 	player.check_flip(direction)

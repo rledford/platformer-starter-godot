@@ -15,6 +15,7 @@ class PlayerInput:
 @export var air_accel := 750.0
 @export var air_decel := 750.0
 @export var jump_velocity := -600.0
+@export var jump_cancel_mult := 0.25
 @export var jump_buffer_time := 100.0
 @export var max_jumps := 2
 @export var max_fall_velocity := 600.0
@@ -64,6 +65,9 @@ func consume_jump() -> void:
 	_jump_buffer_timer = 0
 	_jumps_remaining -= 1
 	_coyote_timer = 0
+	
+func consume_wall_jump() -> void:
+	_jump_buffer_timer = 0
 	
 func can_jump() -> bool:
 	return _jumps_remaining > 0
