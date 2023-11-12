@@ -15,12 +15,13 @@ func physics_update(delta: float) -> void:
 	var move_x = player.input.x
 	var move_y = player.input.y
 	var is_on_wall = player.is_on_wall()
+	var is_on_floor = player.is_on_floor()
 	
 	if not is_on_wall or move_x != wall_direction:
 		if detatch_timer > 0:
 			detatch_timer -= delta * 1000.0
 		else:
-			if not player.is_on_floor():
+			if not is_on_floor:
 				state_machine.transition_to("Air")
 				return
 			elif move_x != 0:
@@ -29,6 +30,12 @@ func physics_update(delta: float) -> void:
 			else:
 				state_machine.transition_to("Idle")
 				return
+	if is_on_floor:
+		if move_x != 0:
+			state_machine.transition_to("Run")
+		else:
+			state_machine.transition_to("Idle")
+		return
 	
 	if player.input.jump:
 		state_machine.transition_to("Air", {do_wall_jump = true, direction = -player.facing})
