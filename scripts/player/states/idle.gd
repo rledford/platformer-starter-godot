@@ -3,9 +3,9 @@ extends PlayerState
 
 func enter(_msg: Dictionary = {}) -> void:
 	print("enter idle")
-	player.velocity = Vector2.ZERO
+	player.ap.play("idle")
 	
-func physics_update(_delta: float):
+func physics_update(delta: float):
 	if not player.is_on_floor():
 		state_machine.transition_to("Air")
 		return
@@ -16,7 +16,14 @@ func physics_update(_delta: float):
 		state_machine.transition_to("Air", {
 			do_jump = true
 		})
-	elif move_x != 0:
-		state_machine.transition_to("Run")
+		return
 	elif player.get_dash_pressed():
 		state_machine.transition_to("Dash")
+		return
+		
+	if move_x != 0:
+		state_machine.transition_to("Run")
+	elif player.velocity.x != 0:
+		var velocity = player.velocity.x + -player.facing * player.decel * delta
+		player.velocity.x = 0 if sign(velocity) != sign(player.velocity.x) else velocity
+		player.move_and_slide()

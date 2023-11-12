@@ -6,6 +6,7 @@ var wall_direction = 0
 func enter(_msg: Dictionary = {}) -> void:
 	print("enter wall state")
 	wall_direction = player.facing
+	player.ap.play("idle")
 	
 func physics_update(_delta: float) -> void:
 	var move_x = player.get_input_x()
@@ -15,8 +16,13 @@ func physics_update(_delta: float) -> void:
 	if not is_on_wall or move_x != wall_direction:
 		if not player.is_on_floor():
 			state_machine.transition_to("Air")
-		else:
+			return
+		elif move_x != 0:
 			state_machine.transition_to("Run")
+			return
+		else:
+			state_machine.transition_to("Idle")
+			return
 	else:
 		player.velocity.x = wall_direction
 	if move_y != 0:

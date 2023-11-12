@@ -6,6 +6,8 @@ var timer = 0
 func enter(_msg: Dictionary = {}):
 	print("enter dash")
 	timer = player.dash_time
+	player.velocity.y = 0
+	player.ap.play("jump")
 	
 func physics_update(delta: float) -> void:
 	timer -= delta * 1000.0
