@@ -7,6 +7,7 @@ func enter(_msg: Dictionary = {}) -> void:
 	
 func physics_update(delta: float) -> void:
 	if not player.is_on_floor():
+		player.start_coyote()
 		state_machine.transition_to("Air")
 		return
 		

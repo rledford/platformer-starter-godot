@@ -12,7 +12,8 @@ func enter(msg: Dictionary = {}) -> void:
 	elif msg.has("do_jump"):
 		_do_jump()
 	else:
-		player.ap.play("fall")
+		if not player.has_coyote():
+			player.ap.play("fall")
 		
 func exit():
 	is_wall_jumping = false
@@ -31,10 +32,12 @@ func physics_update(delta: float) -> void:
 			var velocity = player.velocity.x + player.air_accel * player.input.x * delta
 			player.velocity.x = clamp(velocity, -player.speed, player.speed)
 		elif player.velocity.x != 0:
-			var velocity = player.velocity.x + -player.facing * player.air_decel * delta
+			var velocity = player.velocity.x + -sign(player.velocity.x) * player.air_decel * delta
 			player.velocity.x = 0.0 if sign(velocity) != sign(player.velocity.x) else velocity
-		
-	player.velocity.y += player.gravity
+	
+	if not player.has_coyote():
+		player.velocity.y += player.gravity
+
 	player.move_and_slide()
 	
 	if player.is_on_floor():
@@ -57,7 +60,7 @@ func physics_update(delta: float) -> void:
 		return
 	else:
 		player.velocity.y = min(player.velocity.y, player.max_fall_velocity)
-		if player.velocity.y > 0:
+		if player.velocity.y > 0 && !player.has_coyote():
 			player.ap.play("fall")
 
 func _do_jump() -> void:
