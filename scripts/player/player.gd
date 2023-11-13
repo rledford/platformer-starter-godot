@@ -61,10 +61,13 @@ func check_flip(direction: int) -> void:
 		facing = new_facing
 		scale.x *= -1
 		
-func consume_jump() -> void:
+func use_jump() -> void:
 	_jump_buffer_timer = 0
 	_jumps_remaining -= 1
-	_coyote_timer = 0
+	
+func use_wall_jump() -> void:
+	_jump_buffer_timer = 0
+	_jumps_remaining = min(_jumps_remaining, max_jumps - 1)
 	
 func can_jump() -> bool:
 	return _jumps_remaining > 0

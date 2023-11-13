@@ -4,7 +4,7 @@ extends PlayerState
 var timer = 0
 
 func enter(_msg: Dictionary = {}):
-	print("enter dash")
+	print("enter dash state")
 	timer = player.dash_time
 	player.velocity.y = 0
 	player.ap.play("jump")

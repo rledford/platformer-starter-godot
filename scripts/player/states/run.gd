@@ -2,7 +2,7 @@ class_name PlayerRunState
 extends PlayerState
 
 func enter(_msg: Dictionary = {}) -> void:
-	print("enter run")
+	print("enter run state")
 	player.ap.play("run")
 	player.reset_jumps()
 	

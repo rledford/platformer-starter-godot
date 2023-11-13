@@ -6,7 +6,7 @@ var wall_jump_input_th: float = 150.0
 var wall_jump_input_timer: float = 0.0
 
 func enter(msg: Dictionary = {}) -> void:
-	print("enter air")
+	print("enter air state")
 	if msg.has("do_wall_jump"):
 		_do_wall_jump(msg.get("direction"))
 	elif msg.has("do_jump"):
@@ -66,14 +66,14 @@ func physics_update(delta: float) -> void:
 			player.ap.play("fall")
 
 func _do_jump() -> void:
-	print("do regular jump")
-	player.consume_jump()
+	print("normal jump")
+	player.use_jump()
 	player.velocity.y = player.jump_velocity
 	player.ap.play("jump")
 	
 func _do_wall_jump(direction: int) -> void:
-	print("do wall jump")
-	player.consume_jump()
+	print("wall jump")
+	player.use_wall_jump()
 	player.velocity.x = sign(direction) * player.speed
 	player.velocity.y = player.jump_velocity
 	player.check_flip(direction)

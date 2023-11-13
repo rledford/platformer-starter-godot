@@ -2,7 +2,7 @@ class_name PlayerIdleState
 extends PlayerState
 
 func enter(_msg: Dictionary = {}) -> void:
-	print("enter idle")
+	print("enter idle state")
 	player.ap.play("idle")
 	player.reset_jumps()
 	
