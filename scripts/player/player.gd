@@ -64,6 +64,7 @@ func check_flip(direction: int) -> void:
 func use_jump() -> void:
 	_jump_buffer_timer = 0
 	_jumps_remaining -= 1
+	_coyote_timer = 0
 	
 func use_wall_jump() -> void:
 	_jump_buffer_timer = 0
